@@ -1,0 +1,57 @@
+Syslog settings in opennms when using syslog-ng.
+
+1) In OpenNMS, you will need to alter the default syslogd-configuration.xml file.
+
+Compare the default file with the one in my github.
+
+There are 4 lines altered: the parser parameter, the forward regexp, 
+the matching-group-host and the matching-group-message.
+Set your timezone for wherever you are. Example:  "AMERICA/CHICAGO"
+---------------------------------------------------------------------
+parser="org.opennms.netmgt.syslogd.CustomSyslogParser"
+forwarding-regexp="^((.+?) (.*))\r?\n?$"
+matching-group-host="2"
+matching-group-message="3"
+
+Replace the existing lines, or entire file if it's identical other than the 4 above lines, and restart opennms services on the server.
+
+
+
+2) In the syslog-ng.conf file for Syslog-NG, there are 3 lines added, and 2 commented out from the default on a linux based installation.
+
+Added lines:
+------------
+udp(port(514));
+destination opennms { udp("127.0.0.1" port(10514)); };
+log { source(s_src); destination(opennms); };
+
+
+Commented out lines:
+---------------------
+#       system();
+#       internal();
+
+The reason I comment out the linux servers ability to dump info into opennms is because I have other ways of monitoring that system and only want my environments syslogs, not the local system's logs.
+In Ubuntu, I use `journalctl -xe` and couple other things, not syslog-ng. I don't want the local messages interfering with the AI/Machine Learning portion of my dev box.
+More on the AI stuff in a later Dev notebook.
+
+Copy the syslog-ng file into the /etc/syslog-ng directory where your existing one is, but for the sake of your own sanity, compare my file to the default one generated, and back it up before replacing and restarting services.
+
+Resetart syslog-ng services on the server.
+
+Now you got syslog, but be sure you complete Notebooks 1 and 2 after your fresh installation first, otherwise the syslog output in the event console is junky, unsorted, and unorganized.
+Critical and Emergency Syslog entries will show up as alerts in your alerts console per default alert definitions (which we haven't touched yet).
+As an example:
+1) Do OpenNMS Notebook 1.
+2) Do OpenNMS Notebook 2.
+3) Add Cisco Requisition with SNMP and ICMP in it's definition if you have not already.
+4) Setup SNMP on your Cisco devices.
+5) Add Cisco Devices to your Cisco Requisition.
+6) Syncronize Database.
+7) Do OpenNMS notebook 3. (this notebook)
+8) Setup syslog on your Cisco devices to point to opennms server static IP address.
+
+
+
+
+

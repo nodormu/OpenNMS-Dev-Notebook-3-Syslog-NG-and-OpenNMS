@@ -1,2 +1,2 @@
-# OpenNMS-Dev-Notebook-3-Syslog-NG-and-OpenNMS
-OpenNMS with syslog-ng. A marriage made in monitoring heaven.
+Adding syslog data using syslog-ng is my preferred method, but you must complete Notebook 1 and Notebook 2 after a fresh install of OpenNMS Horizon before adding syslog.
+If you don't you will regret it. This does not cover installing syslog-ng just setting is up with OpenNMS on a linux based system.

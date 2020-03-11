@@ -15,6 +15,20 @@ matching-group-message="3"
 
 Replace the existing lines, or entire file if it's identical other than the 4 above lines, and restart opennms services on the server.
 
+Now you need to set the syslog service located in your opennms XML configuration file:  service-configuration.xml
+Find this section. It will say false initially, but change it to true as shown below.
+
+   <service enabled="true">
+      <name>OpenNMS:Name=Syslogd</name>
+      <class-name>org.opennms.netmgt.syslogd.jmx.Syslogd</class-name>
+      <invoke method="init" pass="0" at="start"/>
+      <invoke method="start" pass="1" at="start"/>
+      <invoke method="status" pass="0" at="status"/>
+      <invoke method="stop" pass="0" at="stop"/>
+   </service>
+
+Then restart opennms services.
+
 
 
 2) In the syslog-ng.conf file for Syslog-NG, there are 3 lines added, and 2 commented out from the default on a linux based installation.
@@ -37,7 +51,7 @@ More on the AI stuff in a later Dev notebook.
 
 Copy the syslog-ng file into the /etc/syslog-ng directory where your existing one is, but for the sake of your own sanity, compare my file to the default one generated, and back it up before replacing and restarting services.
 
-Resetart syslog-ng services on the server.
+Restart syslog-ng services on the server.
 
 Now you got syslog, but be sure you complete Notebooks 1 and 2 after your fresh installation first, otherwise the syslog output in the event console is junky, unsorted, and unorganized.
 Critical and Emergency Syslog entries will show up as alerts in your alerts console per default alert definitions (which we haven't touched yet).
